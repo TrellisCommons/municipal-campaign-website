@@ -1,0 +1,94 @@
+name: "CI"
+
+on:
+  pull_request:
+
+env:
+  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GPPACKAGIST_PAT }}"}}'
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  nodejs-checks:
+    name: Build, Lint, Format with Auto-Commit
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_MESSAGE: "Modified files from CI"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 2
+          token: ${{ secrets.ACTION_PAT }}
+
+      - name: Check for workflow loop using commit messages
+        run: |
+          CURRENT_COMMIT_MESSAGE=$(git show -s --pretty=%B HEAD)
+          LAST_COMMIT_MESSAGE=$(git show -s --pretty=%B HEAD~1)
+
+          if [ "$CURRENT_COMMIT_MESSAGE" == "$COMMIT_MESSAGE" ] && \
+             [ "$LAST_COMMIT_MESSAGE" == "$COMMIT_MESSAGE" ]; then
+            echo "It looks like the last two commits are from CI. This indicates a loop."
+            exit 1
+          fi
+
+      - name: Setup PHP
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+          ini-values: "memory_limit=1G"
+          coverage: none
+          tools: cs2pr
+
+      - name: Install Composer dependencies
+        uses: "ramsey/composer-install@v3"
+
+      - name: Run PHPCS
+        run: |
+          gh pr diff ${{ github.event.number }} --name-only | xargs find 2> /dev/null \
+            | xargs vendor/bin/phpcbf --standard=phpcs.xml
+        continue-on-error: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: "Blocks: Install dependencies"
+        working-directory: web/plugins/gpo-action-blocks
+        run: npm install
+
+      - name: "Blocks: Lint & Build"
+        working-directory: web/plugins/gpo-action-blocks
+        run: |
+          npm run lint
+          npm run build
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: "Theme: Build SCSS"
+        run: npm run compile-sass-ci
+
+      - name: "Lint JavaScript"
+        run: npm run lint:fix
+
+      - name: Format code with Prettier
+        run: npx prettier --write .
+
+      - name: Push Changes
+        id: auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: ${{ env.COMMIT_MESSAGE }}
+          commit_options: "--no-verify"
+
+      - name: Fail workflow if files were modified
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: |
+          echo "There were modified files after running CI."
+          exit 1
+
+      - name: Run PHPCS
+        run: |
+          gh pr diff ${{ github.event.number }} --name-only | xargs find 2> /dev/null \
+            | xargs vendor/bin/phpcs --standard=phpcs-ci.xml --report=checkstyle | cs2pr
+        continue-on-error: true
