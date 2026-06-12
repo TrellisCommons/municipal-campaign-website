@@ -66,7 +66,7 @@ echo "::endgroup::"
 #################
 
 echo "::group::Restarting PHP-FPM..."
-sudo service php8.2-fpm reload
+sudo service php8.4-fpm reload
 echo "  PHP-FPM: restarted"
 echo "::endgroup::"
 
