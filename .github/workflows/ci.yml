@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install dependencies
-              working-directory: municipal-campaign-website
+        working-directory: municipal-campaign-website
         run: npm install
 
       - name: "Theme: Build SCSS"
