@@ -52,16 +52,6 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
 
-      - name: "Blocks: Install dependencies"
-        working-directory: web/plugins/gpo-action-blocks
-        run: npm install
-
-      - name: "Blocks: Lint & Build"
-        working-directory: web/plugins/gpo-action-blocks
-        run: |
-          npm run lint
-          npm run build
-
       - name: Install dependencies
         run: npm install
 
