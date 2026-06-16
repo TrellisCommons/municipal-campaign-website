@@ -53,16 +53,19 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install dependencies
-        working-directory: municipal-campaign-website
+        working-directory: web/app/themes/twentytwentyfive
         run: npm install
 
       - name: "Theme: Build SCSS"
+        working-directory: web/app/themes/twentytwentyfive
         run: npm run compile-sass-ci
 
       - name: "Lint JavaScript"
+        working-directory: web/app/themes/twentytwentyfive
         run: npm run lint:fix
 
       - name: Format code with Prettier
+        working-directory: web/app/themes/twentytwentyfive
         run: npx prettier --write .
 
       - name: Push Changes
