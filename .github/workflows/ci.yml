@@ -4,7 +4,6 @@ on:
   pull_request:
 
 env:
-  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GPPACKAGIST_PAT }}"}}'
   GH_TOKEN: ${{ github.token }}
 
 jobs:
@@ -58,7 +57,7 @@ jobs:
 
       - name: "Theme: Build SCSS"
         working-directory: web/app/themes/twentytwentyfive
-        run: npm run compile-sass-ci
+        run: npm run build
 
       - name: Push Changes
         id: auto-commit-action
