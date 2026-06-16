@@ -60,14 +60,6 @@ jobs:
         working-directory: web/app/themes/twentytwentyfive
         run: npm run compile-sass-ci
 
-      - name: "Lint JavaScript"
-        working-directory: web/app/themes/twentytwentyfive
-        run: npm run lint:fix
-
-      - name: Format code with Prettier
-        working-directory: web/app/themes/twentytwentyfive
-        run: npx prettier --write .
-
       - name: Push Changes
         id: auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v5
