@@ -1,0 +1,5 @@
+.env
+.phpunit.cache/
+vendor/
+web/wp/
+web/app/
