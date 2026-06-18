@@ -85,7 +85,7 @@ echo "::endgroup::"
 ###########################
 
 echo "::group::Updating WordPress Database"
-"$WP_CLI_BIN" core update-db
+"$WP_CLI_BIN" core update-db --network
 echo "  WordPress Database: updated"
 echo "::endgroup::"
 
