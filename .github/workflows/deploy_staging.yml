@@ -6,9 +6,18 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
 jobs:
   deploy_to_staging:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,9 +34,8 @@ jobs:
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST_PROD1 }}
-          PR_SHA: ${{ github.event.pull_request.head.sha }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
           ssh $SSH_USER@$SSH_HOST \
-            "COMMIT_SHA=\"${PR_SHA:-$GITHUB_SHA}\" SITE_DIR=\"municipal-campaign-website-staging\" bash -s" \
+            "COMMIT_SHA=\"$GITHUB_SHA\" SITE_DIR=\"municipal-campaign-website-staging\" bash -s" \
             < ./scripts/deploy_action.sh;
