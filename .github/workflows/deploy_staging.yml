@@ -19,15 +19,15 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Add SSH host key
-        run: ssh-keyscan -H ${{ secrets.SSH_HOST_STAGE }} >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST_PROD1 }} >> ~/.ssh/known_hosts
 
       - name: Deployment
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST_STAGE }}
+          SSH_HOST: ${{ secrets.SSH_HOST_PROD1 }}
           PR_SHA: ${{ github.event.pull_request.head.sha }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
           ssh $SSH_USER@$SSH_HOST \
-            "COMMIT_SHA=\"${PR_SHA:-$GITHUB_SHA}\" SITE_DIR=\"staging.gpo.ca\" bash -s" \
+            "COMMIT_SHA=\"${PR_SHA:-$GITHUB_SHA}\" SITE_DIR=\"municipal-campaign-website-2\" bash -s" \
             < ./scripts/deploy_action.sh;

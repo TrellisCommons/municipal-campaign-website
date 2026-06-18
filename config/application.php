@@ -178,6 +178,18 @@ if (file_exists($env_config)) {
     require_once $env_config;
 }
 
+/**
+ * Multisite
+ */
+Config::define('WP_ALLOW_MULTISITE', true);
+Config::define('MULTISITE', true);
+Config::define('SUBDOMAIN_INSTALL', true);
+Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
+Config::define('PATH_CURRENT_SITE', '/');
+Config::define('SITE_ID_CURRENT_SITE', 1);
+Config::define('BLOG_ID_CURRENT_SITE', 1);
+Config::define('WP_DEFAULT_THEME', 'twentytwentyfive');
+
 Config::apply();
 
 /**

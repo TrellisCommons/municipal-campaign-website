@@ -23,7 +23,7 @@ fi
 ###################
 
 echo "checking directory exists..."
-DEPLOY_DIR="/home/${SITE_DIR}"
+DEPLOY_DIR="/var/www/${SITE_DIR}"
 if [ ! -d "$DEPLOY_DIR" ]; then
   echo "ERROR: Deployment directory $DEPLOY_DIR does not exist."
   exit 1
