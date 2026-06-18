@@ -19,6 +19,14 @@ if [ -z "${SITE_DIR:-}" ] || [ -z "${COMMIT_SHA:-}" ]; then
 	exit 1
 fi
 
+	case "$SITE_DIR" in
+		municipal-campaign-website|municipal-campaign-website-staging)
+			;;
+		*)
+			echo "ERROR: SITE_DIR '$SITE_DIR' is not an allowed deployment target."
+			exit 1
+			;;
+	esac
 # CD into Directory
 ###################
 
@@ -28,7 +36,7 @@ if [ ! -d "$DEPLOY_DIR" ]; then
   echo "ERROR: Deployment directory $DEPLOY_DIR does not exist."
   exit 1
 fi
-cd $DEPLOY_DIR
+cd "$DEPLOY_DIR"
 echo "currently working from $PWD"
 
 WP_CLI_BIN=""
@@ -61,7 +69,7 @@ echo "::endgroup::"
 
 echo "::group::Checkout Commit $COMMIT_SHA"
 git fetch origin
-git switch -f --detach $COMMIT_SHA
+git switch -f --detach "$COMMIT_SHA"
 echo "  Checkout Complete"
 echo "::endgroup::"
 
