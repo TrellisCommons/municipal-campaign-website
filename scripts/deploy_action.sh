@@ -31,6 +31,17 @@ fi
 cd $DEPLOY_DIR
 echo "currently working from $PWD"
 
+WP_CLI_BIN=""
+
+if [ -x "./vendor/bin/wp" ]; then
+	WP_CLI_BIN="./vendor/bin/wp"
+elif command -v wp >/dev/null 2>&1; then
+	WP_CLI_BIN="$(command -v wp)"
+else
+	echo "ERROR: WP-CLI is not available in ./vendor/bin/wp or on PATH."
+	exit 1
+fi
+
 echo "::endgroup::"
 
 # Assert: no git files have been modified
@@ -74,7 +85,7 @@ echo "::endgroup::"
 ###########################
 
 echo "::group::Updating WordPress Database"
-./vendor/bin/wp core update-db
+"$WP_CLI_BIN" core update-db
 echo "  WordPress Database: updated"
 echo "::endgroup::"
 
@@ -83,10 +94,10 @@ echo "::endgroup::"
 
 echo "::group::Enabling All Plugins"
 
-INACTIVE_PLUGINS=$(./vendor/bin/wp plugin list --field=name --status=inactive | tr '\n' ' ' | xargs)
+INACTIVE_PLUGINS=$("$WP_CLI_BIN" plugin list --field=name --status=inactive | tr '\n' ' ' | xargs)
 
 if [ -n "$INACTIVE_PLUGINS" ]; then
-	./vendor/bin/wp plugin activate $INACTIVE_PLUGINS
+	"$WP_CLI_BIN" plugin activate $INACTIVE_PLUGINS
 fi
 
 echo "::endgroup::"
@@ -95,7 +106,7 @@ echo "::endgroup::"
 #######################
 
 echo "::group::Flushing WordPress Cache"
-./vendor/bin/wp cache flush
+"$WP_CLI_BIN" cache flush
 echo "  Cache: flushed"
 echo "::endgroup::"
 

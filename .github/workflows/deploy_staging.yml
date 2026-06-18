@@ -29,5 +29,5 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         run: |
           ssh $SSH_USER@$SSH_HOST \
-            "COMMIT_SHA=\"${PR_SHA:-$GITHUB_SHA}\" SITE_DIR=\"municipal-campaign-website\" bash -s" \
+            "COMMIT_SHA=\"${PR_SHA:-$GITHUB_SHA}\" SITE_DIR=\"municipal-campaign-website-staging\" bash -s" \
             < ./scripts/deploy_action.sh;
