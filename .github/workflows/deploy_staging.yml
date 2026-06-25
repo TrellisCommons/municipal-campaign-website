@@ -1,0 +1,43 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy_to_staging:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add SSH host key
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST_STAGING != '' && secrets.SSH_HOST_STAGING || secrets.SSH_HOST_PROD1 }}
+        run: ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deployment
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST_STAGING != '' && secrets.SSH_HOST_STAGING || secrets.SSH_HOST_PROD1 }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          ssh $SSH_USER@$SSH_HOST \
+            "COMMIT_SHA=\"$GITHUB_SHA\" SITE_DIR=\"municipal-campaign-website-staging\" bash -s" \
+            < ./scripts/deploy_action.sh;

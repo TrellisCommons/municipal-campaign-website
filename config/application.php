@@ -178,6 +178,34 @@ if (file_exists($env_config)) {
     require_once $env_config;
 }
 
+/**
+ * Multisite
+ */
+$multisite_enabled = env('MULTISITE');
+
+if ($multisite_enabled === null) {
+    $multisite_enabled = true;
+}
+
+$wp_allow_multisite = env('WP_ALLOW_MULTISITE');
+
+if ($wp_allow_multisite === null) {
+    $wp_allow_multisite = $multisite_enabled;
+}
+
+Config::define('WP_ALLOW_MULTISITE', $wp_allow_multisite);
+Config::define('MULTISITE', $multisite_enabled);
+
+if ($multisite_enabled) {
+    Config::define('SUBDOMAIN_INSTALL', env('SUBDOMAIN_INSTALL') ?? true);
+    Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
+    Config::define('PATH_CURRENT_SITE', env('PATH_CURRENT_SITE') ?: '/');
+    Config::define('SITE_ID_CURRENT_SITE', env('SITE_ID_CURRENT_SITE') ?: 1);
+    Config::define('BLOG_ID_CURRENT_SITE', env('BLOG_ID_CURRENT_SITE') ?: 1);
+}
+
+Config::define('WP_DEFAULT_THEME', 'twentytwentyfive');
+
 Config::apply();
 
 /**
