@@ -93,7 +93,7 @@ echo "::endgroup::"
 ###########################
 
 echo "::group::Updating WordPress Database"
-"$WP_CLI_BIN" core update-db --network
+"$WP_CLI_BIN" core update-db --network --allow-root
 echo "  WordPress Database: updated"
 echo "::endgroup::"
 
@@ -102,10 +102,10 @@ echo "::endgroup::"
 
 echo "::group::Enabling All Plugins"
 
-INACTIVE_PLUGINS=$("$WP_CLI_BIN" plugin list --field=name --status=inactive | tr '\n' ' ' | xargs)
+INACTIVE_PLUGINS=$("$WP_CLI_BIN" plugin list --field=name --status=inactive --allow-root | tr '\n' ' ' | xargs)
 
 if [ -n "$INACTIVE_PLUGINS" ]; then
-	"$WP_CLI_BIN" plugin activate $INACTIVE_PLUGINS
+	"$WP_CLI_BIN" plugin activate $INACTIVE_PLUGINS --allow-root
 fi
 
 echo "::endgroup::"
@@ -114,7 +114,7 @@ echo "::endgroup::"
 #######################
 
 echo "::group::Flushing WordPress Cache"
-"$WP_CLI_BIN" cache flush
+"$WP_CLI_BIN" cache flush --allow-root
 echo "  Cache: flushed"
 echo "::endgroup::"
 
