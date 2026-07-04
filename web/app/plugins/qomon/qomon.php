@@ -142,15 +142,21 @@ if (is_admin()) {
 
 } else {
 	/**
-	 * Add the script that converts a div.qomon-form[data-base_id] into a Qomon form with the corresponding base_id
+	 * Load Qomon setup in the footer so the form container is present before initialization.
 	 */
-	if (!function_exists('wpqomon_add_form_cdn_script')) {
-		function wpqomon_add_form_cdn_script()
+	if (!function_exists('wpqomon_enqueue_form_cdn_script')) {
+		function wpqomon_enqueue_form_cdn_script()
 		{
-			echo '<script type="text/javascript" async defer src="' . esc_url("https://scripts.qomon.org/forms/v1/setup.js") . '"></script>';
+			wp_enqueue_script(
+				'qomon-forms-setup',
+				'https://scripts.qomon.org/forms/v1/setup.js',
+				[],
+				null,
+				true
+			);
 		}
 	}
-	add_action('wp_head', 'wpqomon_add_form_cdn_script');
+	add_action('wp_enqueue_scripts', 'wpqomon_enqueue_form_cdn_script');
 
 
 	/**
