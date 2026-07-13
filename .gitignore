@@ -5,6 +5,8 @@ web/app/plugins/*
 !web/app/plugins/qomon/**
 !web/app/plugins/broken-link-checker/
 !web/app/plugins/broken-link-checker/**
+!web/app/plugins/stripe-payments/
+!web/app/plugins/stripe-payments/**
 # Ignore Composer-installed mu-plugin directories; single-file mu-plugins are tracked intentionally
 web/app/mu-plugins/*/
 web/app/themes/twentytwentyfive/
