@@ -17,7 +17,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@v7
 
       - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.10.0
