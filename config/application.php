@@ -111,8 +111,8 @@ if ($multisite_enabled && $multisite_mapped_domains) {
     $fallback_host = env('DOMAIN_CURRENT_SITE');
     $resolved_host = $request_host ?: $fallback_host;
 
-    $is_https =
-        (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    $is_https
+        = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
 
     $scheme = $is_https ? 'https' : 'http';
