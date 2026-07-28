@@ -66,6 +66,20 @@ if (file_exists($root_dir . '/.env')) {
 define('WP_ENV', env('WP_ENV') ?: 'production');
 
 /**
+ * Multisite mode defaults to enabled unless explicitly disabled.
+ */
+$multisite_enabled = env('MULTISITE');
+
+if ($multisite_enabled === null) {
+    $multisite_enabled = true;
+}
+
+/**
+ * Enable mapped-domain URL detection only when explicitly configured.
+ */
+$multisite_mapped_domains = env('MULTISITE_MAPPED_DOMAINS') ?: false;
+
+/**
  * Set WP_ENVIRONMENT_TYPE if not already defined
  */
 if (!defined('WP_ENVIRONMENT_TYPE')) {
@@ -92,8 +106,28 @@ if (!defined('WP_DEVELOPMENT_MODE')) {
 /**
  * URLs
  */
-Config::define('WP_HOME', env('WP_HOME'));
-Config::define('WP_SITEURL', env('WP_SITEURL'));
+if ($multisite_enabled && $multisite_mapped_domains) {
+    $request_host = $_SERVER['HTTP_HOST'] ?? null;
+    $fallback_host = env('DOMAIN_CURRENT_SITE');
+    $resolved_host = $request_host ?: $fallback_host;
+
+    $is_https =
+        (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+
+    $scheme = $is_https ? 'https' : 'http';
+
+    if ($resolved_host) {
+        Config::define('WP_HOME', $scheme . '://' . $resolved_host);
+        Config::define('WP_SITEURL', Config::get('WP_HOME') . '/wp');
+    } else {
+        Config::define('WP_HOME', env('WP_HOME'));
+        Config::define('WP_SITEURL', env('WP_SITEURL'));
+    }
+} else {
+    Config::define('WP_HOME', env('WP_HOME'));
+    Config::define('WP_SITEURL', env('WP_SITEURL'));
+}
 
 /**
  * Custom Content Directory
@@ -181,12 +215,6 @@ if (file_exists($env_config)) {
 /**
  * Multisite
  */
-$multisite_enabled = env('MULTISITE');
-
-if ($multisite_enabled === null) {
-    $multisite_enabled = true;
-}
-
 $wp_allow_multisite = env('WP_ALLOW_MULTISITE');
 
 if ($wp_allow_multisite === null) {
