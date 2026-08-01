@@ -17,7 +17,7 @@ Bedrock-based WordPress multisite platform for TrellisCommons municipal campaign
 
 | Environment | Domain | App root | Database |
 |---|---|---|---|
-| Production | `1.trelliscommons.ca`, `2.trelliscommons.ca` | `/var/www/municipal-campaign-website` | `wordpress` |
+| Production | `admin.trelliscommons.ca`, `stephaniegoertz.trelliscommons.ca` | `/var/www/municipal-campaign-website` | `wordpress` |
 | Staging | `staging.trelliscommons.ca` | `/var/www/municipal-campaign-website-staging` | `wordpress_staging` |
 | Local | `municipal-campaign-website.ddev.site` | `.ddev/` | DDEV managed |
 
@@ -66,7 +66,7 @@ ssh root@138.197.128.199
 Copy `.env.example` to `.env` and fill in values. Required variables:
 
 - `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`
-- `WP_HOME` — full URL e.g. `https://1.trelliscommons.ca`
+- `WP_HOME` — full URL for the primary network/admin site, e.g. `https://admin.trelliscommons.ca`
 - `WP_SITEURL` — `${WP_HOME}/wp`
 - `WP_ENV` — `production`, `staging`, or `development`
 - `DOMAIN_CURRENT_SITE` — root domain of the multisite network
