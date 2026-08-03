@@ -68,16 +68,12 @@ define('WP_ENV', env('WP_ENV') ?: 'production');
 /**
  * Multisite mode defaults to enabled unless explicitly disabled.
  */
-$multisite_enabled = env('MULTISITE');
-
-if ($multisite_enabled === null) {
-    $multisite_enabled = true;
-}
+$multisite_enabled = env('MULTISITE') ?? true;
 
 /**
  * Enable mapped-domain URL detection only when explicitly configured.
  */
-$multisite_mapped_domains = env('MULTISITE_MAPPED_DOMAINS') ?: false;
+$multisite_mapped_domains = env('MULTISITE_MAPPED_DOMAINS') ?? false;
 
 /**
  * Set WP_ENVIRONMENT_TYPE if not already defined
