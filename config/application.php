@@ -100,6 +100,17 @@ if (!defined('WP_DEVELOPMENT_MODE')) {
 }
 
 /**
+ * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
+ * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
+ *
+ * This must run before the mapped-domain URL block below, since that block
+ * reads $_SERVER['HTTPS'] to determine the scheme for WP_HOME/WP_SITEURL.
+ */
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+/**
  * URLs
  */
 if ($multisite_enabled && $multisite_mapped_domains) {
@@ -193,14 +204,6 @@ Config::define('WP_DEBUG_DISPLAY', false);
 Config::define('WP_DEBUG_LOG', false);
 Config::define('SCRIPT_DEBUG', false);
 ini_set('display_errors', '0');
-
-/**
- * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
- * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
- */
-if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    $_SERVER['HTTPS'] = 'on';
-}
 
 $env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 
