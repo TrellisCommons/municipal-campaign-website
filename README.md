@@ -43,12 +43,6 @@ Auto-deploys on push to `main`.
 ### Production
 Triggered manually via **Actions → Deploy to Production → Run workflow** in GitHub.
 
-## Server Access
-
-```bash
-ssh root@138.197.128.199
-```
-
 ## Key Files
 
 | File | Purpose |
