@@ -35,3 +35,7 @@ wp-cli.local.yml
 
 # Local maintenance worktrees
 .worktrees/
+
+# Custom first-party plugin (not Composer-managed) - track in git
+!web/app/plugins/donation-form
+!web/app/plugins/donation-form/**

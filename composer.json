@@ -44,6 +44,7 @@
     "roots/bedrock-disallow-indexing": "^2.0",
     "roots/wordpress": "7.0",
     "roots/wp-config": "^1.0",
+    "stripe/stripe-php": "^21.0",
     "vlucas/phpdotenv": "^5.0",
     "wp-theme/twentytwentyfive": "^1.0",
     "wpackagist-plugin/give": "^4.16"
